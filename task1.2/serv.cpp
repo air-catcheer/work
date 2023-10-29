@@ -10,20 +10,20 @@
 #include <vector>
 
 struct ThreadData {
-    int clientSocket; // структура для передачи данных потоку обработки клиента
+    int clientSocket; // СЃС‚СЂСѓРєС‚СѓСЂР° РґР»СЏ РїРµСЂРµРґР°С‡Рё РґР°РЅРЅС‹С… РїРѕС‚РѕРєСѓ РѕР±СЂР°Р±РѕС‚РєРё РєР»РёРµРЅС‚Р°
 };
 
-std::vector<int> clientSockets; // вектор для хранения сокетов клиентов
+std::vector<int> clientSockets; // РІРµРєС‚РѕСЂ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ СЃРѕРєРµС‚РѕРІ РєР»РёРµРЅС‚РѕРІ
 
 void SendMessageToAllClients(const std::string& message) {
-    // отправка сообщений всем клиентам
+    // РѕС‚РїСЂР°РІРєР° СЃРѕРѕР±С‰РµРЅРёР№ РІСЃРµРј РєР»РёРµРЅС‚Р°Рј
     for (int clientSocket : clientSockets) {
         send(clientSocket, message.c_str(), message.size(), 0);
     }
 }
 
 void BroadcastMessage(const std::string& message, int senderSocket) {
-    // отправка сообщений всем клиентам кроме отправителя
+   // РѕС‚РїСЂР°РІРєР° СЃРѕРѕР±С‰РµРЅРёР№ РІСЃРµРј РєР»РёРµРЅС‚Р°Рј РєСЂРѕРјРµ РѕС‚РїСЂР°РІРёС‚РµР»СЏ
     for (int clientSocket : clientSockets) {
         if (clientSocket != senderSocket) {
             send(clientSocket, message.c_str(), message.size(), 0);
@@ -32,7 +32,7 @@ void BroadcastMessage(const std::string& message, int senderSocket) {
 }
 
 void* HandleClient(void* data) {
-    // обработка взаимодействий с клиентом в потоке
+    // РѕР±СЂР°Р±РѕС‚РєР° РІР·Р°РёРјРѕРґРµР№СЃС‚РІРёР№ СЃ РєР»РёРµРЅС‚РѕРј РІ РїРѕС‚РѕРєРµ
     ThreadData* threadData = static_cast<ThreadData*>(data);
     int clientSocket = threadData->clientSocket;
 
@@ -64,7 +64,7 @@ void* HandleClient(void* data) {
 }
 
 void* ServerInputThread(void*) {
-    // ввод с клавиатуры и отправка сообщений клиентам
+    // РІРІРѕРґ СЃ РєР»Р°РІРёР°С‚СѓСЂС‹ Рё РѕС‚РїСЂР°РІРєР° СЃРѕРѕР±С‰РµРЅРёР№ РєР»РёРµРЅС‚Р°Рј
     std::string input;
     while (true) {
         std::getline(std::cin, input);
@@ -73,7 +73,7 @@ void* ServerInputThread(void*) {
 }
 
 int main() {
-    int serverSocket = socket(AF_INET, SOCK_STREAM, 0); // сокет для сервера
+    int serverSocket = socket(AF_INET, SOCK_STREAM, 0); //СЃРѕРєРµС‚ РґР»СЏ СЃРµСЂРІРµСЂР°
 
     if (serverSocket == -1) {
         std::cerr << "Error creating socket: " << strerror(errno) << std::endl;
@@ -82,18 +82,18 @@ int main() {
 
     struct sockaddr_in serverAddress;
     serverAddress.sin_family = AF_INET;
-    serverAddress.sin_port = htons(12345); //настройка адреса и порта сервера
+    serverAddress.sin_port = htons(12345); //РЅР°СЃС‚СЂРѕР№РєР° Р°РґСЂРµСЃР° Рё РїРѕСЂС‚Р° СЃРµСЂРІРµСЂР°
     serverAddress.sin_addr.s_addr = INADDR_ANY;
 
     if (bind(serverSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) == -1) {
-        // привязка сокета к адресу и порту
+        // РїСЂРёРІСЏР·РєР° СЃРѕРєРµС‚Р° Рє Р°РґСЂРµСЃСѓ Рё РїРѕСЂС‚Сѓ
         std::cerr << "Error binding socket: " << strerror(errno) << std::endl;
         close(serverSocket);
         return 1;
     }
 
     if (listen(serverSocket, 5) == -1) {
-        // Начало прослушивания подключений
+       // РќР°С‡Р°Р»Рѕ РїСЂРѕСЃР»СѓС€РёРІР°РЅРёСЏ РїРѕРґРєР»СЋС‡РµРЅРёР№
         std::cerr << "Error starting listening: " << strerror(errno) << std::endl;
         close(serverSocket);
         return 1;
@@ -115,7 +115,8 @@ int main() {
             continue;
         }
 
-        clientSockets.push_back(clientSocket); // добавление сокета клиента в вектор
+        clientSockets.push_back(clientSocket); // РґРѕР±Р°РІР»РµРЅРёРµ СЃРѕРєРµС‚Р° РєР»РёРµРЅС‚Р° РІ РІРµРєС‚РѕСЂ
+
 
         std::cout << "Client connected: " << inet_ntoa(clientAddress.sin_addr) << std::endl;
 
@@ -129,7 +130,7 @@ int main() {
         }
     }
 
-    close(serverSocket); // закрытие сокета сервера
+    close(serverSocket); // Р·Р°РєСЂС‹С‚РёРµ СЃРѕРєРµС‚Р° СЃРµСЂРІРµСЂР°
 
     return 0;
 }
