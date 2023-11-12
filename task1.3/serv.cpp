@@ -101,9 +101,6 @@ void* ServerInputThread(void*) {
                 send(clientSocket, ("Server: " + modifiedInput).c_str(), modifiedInput.size() + 8, 0);
             }
         }
-
-
-
     }
 }
 
